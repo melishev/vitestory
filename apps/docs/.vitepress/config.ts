@@ -1,6 +1,7 @@
 import { defineConfig } from 'vitepress'
+import { withViteStory } from '../../../dist' // FIXME:
 
-export default defineConfig({
+export default withViteStory(defineConfig({
   title: "ViteStory",
   description: "A ViteStory Site",
   srcDir: "src",
@@ -18,4 +19,4 @@ export default defineConfig({
       },
     ],
   },
-})
+}))
