@@ -23,8 +23,9 @@ export default withViteStory(defineConfig({
 
   vitestory: {
     distDir: 'src/examples',
+    pathToTSConfig: path.resolve(__dirname, '../../../tsconfig.app.json'),
     stories: [
-      path.resolve('../../src/components/VSButton.story.vue')
+      path.resolve(__dirname, '../../../src/components/VSButton.story.vue')
     ]
   }
 }))
