@@ -19,4 +19,8 @@ export default withViteStory(defineConfig({
       },
     ],
   },
+
+  vitestory: {
+    distDir: 'src/examples',
+  }
 }))
