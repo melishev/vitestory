@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import { withViteStory } from '../../../dist' // FIXME:
+import { withViteStory } from 'vitestory'
 
 export default withViteStory(defineConfig({
   title: "ViteStory",
