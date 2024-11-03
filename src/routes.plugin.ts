@@ -5,6 +5,7 @@ import type { Plugin } from "vite";
 export interface PluginOptions {
   /** The directory where the files will be generated to */
   distDir: string
+  pathToTSConfig: string
   /** An array of paths pointing to the components on which the stories will be based */
   stories: string[]
 }
@@ -26,22 +27,35 @@ function prepareContentStory() {
 `.trim()
 }
 
-function prepareContentPaths(paths: string[]): string {
+function prepareContentPaths(paths: string[], pathToTSConfig: string): string {
   return `
 // ${cautionString}
 import path from 'node:path'
-import { moduleStoryParser } from 'vitestory/modules'
+import { moduleStoryParser, setupChecker, parseMetadata, filterMetadata } from 'vitestory/modules'
 
 export default {
   async paths() {
     const paths = []
 
+    const checker = setupChecker('${pathToTSConfig}');
+
     for (const pathToStory of ${JSON.stringify(paths)}) {
       const dataAboutStory = await moduleStoryParser(pathToStory)
+      const meta = new Map()
+
+      for (const [name, path] of dataAboutStory.components.entries()) {
+        const data = parseMetadata(checker, path);
+        const filteredMeta = filterMetadata(data);
+
+        meta.set(name, filteredMeta)
+      }
+
+      delete dataAboutStory.components
 
       paths.push({
         params: {
           ...dataAboutStory,
+          meta,
         }
       })
     }
@@ -57,7 +71,7 @@ export default function(options: PluginOptions): Plugin {
 
   const dataFiles = [
     { fileName: `[${key}].md`, content: prepareContentStory() }, 
-    { fileName: `[${key}].paths.js`, content: prepareContentPaths(options.stories) },
+    { fileName: `[${key}].paths.js`, content: prepareContentPaths(options.stories, options.pathToTSConfig) },
   ]
 
   return {

@@ -42,10 +42,16 @@ function getExposeData(pathToFile: string, ast: ReturnType<typeof babelParse>): 
               }
 
               if (prop.key && prop.key.name === 'components' && prop.value.type === 'ArrayExpression') {
-                const componentPathsList = prop.value.elements
-                  .filter((element) => element.type === 'Identifier' && componentPaths[element.name])
-                  .map((element) => componentPaths[element.name]);
-                data['components'] = componentPathsList;
+                const components = new Map()
+
+                for (const element of prop.value.elements) {
+                  if (element.type !== 'Identifier') continue
+                  if (!componentPaths[element.name]) continue
+
+                  components.set(element.name, componentPaths[element.name])
+                }
+
+                data['components'] = components;
               }
             });
           }
