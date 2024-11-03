@@ -2,9 +2,18 @@
   "name": "vitestory",
   "version": "0.0.0",
   "type": "module",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "module": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./modules": {
+      "default": "./dist/modules/index.js",
+      "module": "./dist/modules/index.js",
+      "types": "./dist/modules/index.d.ts"
+    }
+  },
   "workspaces": [
     "apps/*"
   ],
