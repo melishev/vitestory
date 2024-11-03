@@ -1,3 +1,4 @@
+import path from 'path'
 import { defineConfig } from 'vitepress'
 import { withViteStory } from 'vitestory'
 
@@ -22,5 +23,8 @@ export default withViteStory(defineConfig({
 
   vitestory: {
     distDir: 'src/examples',
+    stories: [
+      path.resolve('../../src/components/VSButton.story.vue')
+    ]
   }
 }))

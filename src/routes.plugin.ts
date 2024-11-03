@@ -5,23 +5,59 @@ import type { Plugin } from "vite";
 export interface PluginOptions {
   /** The directory where the files will be generated to */
   distDir: string
+  /** An array of paths pointing to the components on which the stories will be based */
+  stories: string[]
+}
+
+const key = 'slug'
+
+const cautionString = 'Automatically generated ViteStory file. Do not modify it manually!'
+
+function prepareContentStory() {
+  return `
+# {{ $params.title }}
+
+{{ $params.description }}
+
+## Data
+<pre>
+  {{ $params }}
+</pre>
+`.trim()
+}
+
+function prepareContentPaths(paths: string[]): string {
+  return `
+// ${cautionString}
+import path from 'node:path'
+import { moduleStoryParser } from 'vitestory/modules'
+
+export default {
+  async paths() {
+    const paths = []
+
+    for (const pathToStory of ${JSON.stringify(paths)}) {
+      const dataAboutStory = await moduleStoryParser(pathToStory)
+
+      paths.push({
+        params: {
+          ...dataAboutStory,
+        }
+      })
+    }
+
+    return paths
+  }
+}
+`.trim()
 }
 
 export default function(options: PluginOptions): Plugin {
   const getFullPath = (fileName: string) => path.resolve(process.cwd(), options.distDir, fileName)
 
   const dataFiles = [
-    { fileName: `[slug].md`, content: `content`.trim() }, 
-    { fileName: `[slug].paths.js`, content: `
-export default {
-  paths() {
-    return [
-      { params: { slug: 'foo' }},
-      { params: { slug: 'bar' }}
-    ]
-  }
-}
-      ` },
+    { fileName: `[${key}].md`, content: prepareContentStory() }, 
+    { fileName: `[${key}].paths.js`, content: prepareContentPaths(options.stories) },
   ]
 
   return {
