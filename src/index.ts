@@ -1,9 +1,22 @@
+import pluginRoutes from './routes.plugin'
 import type { DefaultTheme, UserConfig, UserConfigExport } from 'vitepress'
 
-// export * from './types'
+export type * from './types'
 
 function configMutation(config: UserConfig<DefaultTheme.Config>) {
-  console.log(config)
+  let viteConfig = config.vite
+  if (!viteConfig) {
+    viteConfig = {}
+    config.vite = viteConfig
+  }
+
+  let vitePlugins = viteConfig.plugins
+  if (!vitePlugins) {
+    vitePlugins = []
+    viteConfig.plugins = vitePlugins
+  }
+
+  vitePlugins.push(pluginRoutes(config.vitestory))
 
   return config
 }
