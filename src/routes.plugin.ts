@@ -11,11 +11,23 @@ export interface PluginOptions {
 }
 
 const key = 'slug'
+const key2 = 'meta'
 
 const cautionString = 'Automatically generated ViteStory file. Do not modify it manually!'
 
 function prepareContentStory() {
   return `
+---
+layout: doc
+aside: false
+---
+
+<!-- ${cautionString} -->
+
+<script setup lang="ts">
+import { VSTableProps, VSTableEvents, VSTableSlots } from 'vitestory/components'
+</script>
+
 # {{ $params.title }}
 
 {{ $params.description }}
@@ -24,6 +36,25 @@ function prepareContentStory() {
 <pre>
   {{ $params }}
 </pre>
+
+<template v-for="key of Object.keys($params.${key2})" :key="key">
+  <h3>{{ key }} API</h3>
+  
+  <template v-if="$params.${key2}[key].props.length">
+    <h4>Props</h4>
+    <VSTableProps :data="$params.${key2}[key].props" />
+  </template>
+
+  <template v-if="$params.${key2}[key].events.length">
+    <h4>Events</h4>
+    <VSTableEvents :data="$params.${key2}[key].events" />
+  </template>
+
+  <template v-if="$params.${key2}[key].slots.length">
+    <h4>Slots</h4>
+    <VSTableSlots :data="$params.${key2}[key].slots" />
+  </template>
+</template>
 `.trim()
 }
 
@@ -41,13 +72,13 @@ export default {
 
     for (const pathToStory of ${JSON.stringify(paths)}) {
       const dataAboutStory = await moduleStoryParser(pathToStory)
-      const meta = new Map()
+      const ${key2} = {}
 
       for (const [name, path] of dataAboutStory.components.entries()) {
         const data = parseMetadata(checker, path);
         const filteredMeta = filterMetadata(data);
 
-        meta.set(name, filteredMeta)
+        Object.assign(${key2}, { [name]: filteredMeta })
       }
 
       delete dataAboutStory.components
@@ -55,7 +86,7 @@ export default {
       paths.push({
         params: {
           ...dataAboutStory,
-          meta,
+          ${key2},
         }
       })
     }
