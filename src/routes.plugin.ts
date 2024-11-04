@@ -25,17 +25,20 @@ aside: false
 <!-- ${cautionString} -->
 
 <script setup lang="ts">
+import { useData } from 'vitepress'
+import { defineAsyncComponent } from 'vue'
 import { VSTableProps, VSTableEvents, VSTableSlots } from 'vitestory/components'
+
+const { params } = useData()
+
+const StoryComponent = defineAsyncComponent(() => import(params.value.pathToStory))
 </script>
 
 # {{ $params.title }}
 
 {{ $params.description }}
 
-## Data
-<pre>
-  {{ $params }}
-</pre>
+<StoryComponent />
 
 <template v-for="key of Object.keys($params.${key2})" :key="key">
   <h3>{{ key }} API</h3>
@@ -85,6 +88,7 @@ export default {
 
       paths.push({
         params: {
+          pathToStory,
           ...dataAboutStory,
           ${key2},
         }
