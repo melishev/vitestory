@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import VSCodeInline from './VSCodeInline.vue';
+import VSCodeInline from './VSCodeInline.vue'
 
 type PropData = {
-  name: string;
-  description: string;
-  required: boolean;
-  type: string;
-  default: string;
+  name: string
+  description: string
+  required: boolean
+  type: string
+  default: string
   schema: any
-};
+}
 
 defineProps<{
-  data: PropData[];
-}>();
+  data: PropData[]
+}>()
 </script>
 
 <template>
-  <table style="display: table; width: 100%;">
+  <table style="display: table; width: 100%">
     <thead>
       <tr>
         <th><span>Name</span></th>

@@ -1,7 +1,7 @@
-import { createChecker, type MetaCheckerOptions } from "vue-component-meta";
+import { createChecker, type MetaCheckerOptions } from 'vue-component-meta'
 
-export default function(pathToTSConfig: string): ReturnType<typeof createChecker> {
-  const schemaExceptions = ['Width<string | number>', 'Height<string | number>'];
+export default function (pathToTSConfig: string): ReturnType<typeof createChecker> {
+  const schemaExceptions = ['Width<string | number>', 'Height<string | number>']
   const checkerOptions: MetaCheckerOptions = {
     forceUseTs: true,
     schema: {
@@ -9,8 +9,8 @@ export default function(pathToTSConfig: string): ReturnType<typeof createChecker
     },
     rawType: false,
     noDeclarations: true,
-  };
-  const checker = createChecker(pathToTSConfig, checkerOptions);
+  }
+  const checker = createChecker(pathToTSConfig, checkerOptions)
 
-  return checker;
+  return checker
 }

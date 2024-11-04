@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import VSCodeInline from './VSCodeInline.vue';
+import VSCodeInline from './VSCodeInline.vue'
 
 type SlotData = {
-  name: string;
-  description: string;
-};
+  name: string
+  description: string
+}
 
 defineProps<{
   data: SlotData[]
@@ -12,7 +12,7 @@ defineProps<{
 </script>
 
 <template>
-  <table style="display: table; width: 100%;">
+  <table style="display: table; width: 100%">
     <thead>
       <tr>
         <th><span>Name</span></th>

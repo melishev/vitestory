@@ -1,27 +1,30 @@
-import type { ComponentMeta } from 'vue-component-meta';
+import type { ComponentMeta } from 'vue-component-meta'
 
 type FilteredComponentMeta = {
-  props: Pick<ComponentMeta['props'][number], 'name' | 'description' | 'required' | 'type' | 'default' | 'schema'>[];
-  events: Pick<ComponentMeta['events'][number], 'name' | 'description' | 'type'>[];
-  slots: Pick<ComponentMeta['slots'][number], 'name' | 'description'>[];
+  props: Pick<ComponentMeta['props'][number], 'name' | 'description' | 'required' | 'type' | 'default' | 'schema'>[]
+  events: Pick<ComponentMeta['events'][number], 'name' | 'description' | 'type'>[]
+  slots: Pick<ComponentMeta['slots'][number], 'name' | 'description'>[]
 }
 
-export default function(meta: Partial<ComponentMeta>): FilteredComponentMeta {
+export default function (meta: Partial<ComponentMeta>): FilteredComponentMeta {
   // console.time('      props - reduce')
-  const props = meta.props!.reduce((acc, curr) => {
-    if (curr.global) return acc
+  const props = meta.props!.reduce(
+    (acc, curr) => {
+      if (curr.global) return acc
 
-    acc.push({
-      name: curr.name,
-      description: curr.description,
-      required: curr.required,
-      type: curr.type,
-      default: curr.default,
-      schema: structuredClone(curr.schema),
-    })
+      acc.push({
+        name: curr.name,
+        description: curr.description,
+        required: curr.required,
+        type: curr.type,
+        default: curr.default,
+        schema: structuredClone(curr.schema),
+      })
 
-    return acc
-  }, [] as FilteredComponentMeta['props'])
+      return acc
+    },
+    [] as FilteredComponentMeta['props'],
+  )
   // console.timeEnd('      props - reduce')
 
   // console.time('      events - map')

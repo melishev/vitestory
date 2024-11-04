@@ -1,5 +1,6 @@
-import pluginRoutes from './routes.plugin'
 import type { DefaultTheme, UserConfig, UserConfigExport } from 'vitepress'
+
+import pluginRoutes from './routes.plugin'
 
 export type * from './types'
 
@@ -21,7 +22,9 @@ function configMutation(config: UserConfig<DefaultTheme.Config>) {
   return config
 }
 
-export async function withViteStory(config: UserConfigExport<DefaultTheme.Config>): Promise<UserConfigExport<DefaultTheme.Config>> {
+export async function withViteStory(
+  config: UserConfigExport<DefaultTheme.Config>,
+): Promise<UserConfigExport<DefaultTheme.Config>> {
   if (typeof config === 'function') {
     return async (ctx) => {
       const userConfig = await config(ctx)

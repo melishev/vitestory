@@ -1,12 +1,11 @@
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 
 export default defineConfig({
-  plugins: [
-    dts({ tsconfigPath: './tsconfig.app.json' }),
-  ],
+  plugins: [dts({ tsconfigPath: './tsconfig.app.json' })],
 
   build: {
     ssr: true,
@@ -24,7 +23,7 @@ export default defineConfig({
 
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
+    },
+  },
 })

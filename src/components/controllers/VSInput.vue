@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { Input } from '../ui/input'
 
-const model = defineModel<string>({ required: true });
-
 defineProps<{
-  title: string;
-  placeholder?: string;
-}>();
+  title: string
+  placeholder?: string
+}>()
+
+const model = defineModel<string>({ required: true })
 </script>
 
 <template>
