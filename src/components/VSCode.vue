@@ -20,16 +20,13 @@
 </script>
 
 <template>
-  <div class="code">
-    <div v-html="highlightedCode"></div>
+  <div class="vs-overflow-x-auto vs-bg-[var(--vp-code-block-bg)]">
+    <div class="code" v-html="highlightedCode"></div>
   </div>
 </template>
 
 <style>
   .code {
-    overflow-x: auto;
-    background: var(--vp-code-block-bg);
-
     pre {
       position: relative;
       z-index: 1;

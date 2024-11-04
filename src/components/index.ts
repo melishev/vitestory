@@ -1,4 +1,6 @@
-export { default as VSButton } from './VSButton.vue'
+import './index.css'
+export * from './controllers'
+
 export { default as VSCode } from './VSCode.vue'
 export { default as VSCodeInline } from './VSCodeInline.vue'
 export { default as VSVariant } from './VSVariant.vue'

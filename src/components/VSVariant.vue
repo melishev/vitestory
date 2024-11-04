@@ -1,91 +1,41 @@
 <script setup lang="ts">
   // TODO: add the ability to expand to full screen
-  import VSButton from './VSButton.vue';
+  import { Button as VSButton } from './ui/button'
   import VSCode from './VSCode.vue';
   import { ref } from 'vue'
+  import { Code } from 'lucide-vue-next';
 
   defineProps<{
-    title: string;
+    title?: string;
     source?: string;
     centering?: boolean;
-  }>();
+    playground?: boolean;
+  }>()
 
   const showCode = ref(false);
 </script>
 
 <template>
-  <div class="variant-title">
-    <h4>{{ title }}</h4>
+  <div class="vs-flex vs-items-center vs-justify-between vs-mt-6 vs-mb-2">
+    <h3 v-if="playground" class="!vs-m-[unset]">Playground</h3>
+    <h4 v-else class="!vs-m-[unset]">{{ title }}</h4>
 
-    <VSButton @click="showCode = !showCode">
-      {{ '</>' }}
+    <VSButton v-if="source" @click="showCode = !showCode" variant="ghost" size="icon">
+      <Code />
     </VSButton>
   </div>
 
-  <div class="variant">
-    <div class="vp-raw variant-playground">
-      <div :class="{ centering: centering }">
+  <div class="vs-w-full vs-my-4 vs-mx-0 vs-overflow-hidden vs-border vs-border-solid vs-border-[var(--vp-c-border)] vs-rounded-lg">
+    <div class="vp-raw vs-flex vs-gap-5 vs-p-5">
+      <div :class="['vs-flex-grow', { 'vs-flex vs-flex-grow vs-items-center vs-justify-center': centering }]">
         <slot />
       </div>
 
-      <div v-if="$slots.controls" class="controls">
+      <div v-if="$slots.controls && playground" class="vs-flex vs-flex-col vs-gap-2.5 vs-min-w-64 vs-max-w-64 vs-p-5 -vs-m-5 vs-ml-0 vs-overflow-y-scroll vs-bg-[var(--vp-c-bg-soft)]">
         <slot name="controls" />
       </div>
     </div>
 
-    <VSCode v-if="source" v-show="showCode" class="variant-code" :source="source" />
+    <VSCode v-if="source" v-show="showCode" :source="source" />
   </div>
 </template>
-
-<style>
-  .variant-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin: 24px 0 8px;
-
-    h4 {
-      margin: unset;
-    }
-  }
-
-  .variant {
-    --vs-indent: 20px;
-
-    width: 100%;
-    margin: 16px 0;
-    overflow: hidden;
-    border: 1px solid var(--vp-c-border);
-    border-radius: 8px;
-
-    .variant-playground {
-      display: flex;
-      gap: var(--vs-indent);
-      padding: var(--vs-indent);
-
-      > div {
-        flex-grow: 1;
-      }
-
-      > .centering {
-        display: flex;
-        flex-grow: 1;
-        align-items: center;
-        justify-content: center;
-      }
-
-      > .controls {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        min-width: 260px;
-        max-width: 260px;
-        padding: var(--vs-indent);
-        margin: calc(var(--vs-indent) * -1) calc(var(--vs-indent) * -1) calc(var(--vs-indent) * -1) 0;
-        overflow-y: scroll;
-        background: rgb(238 238 238);
-        background: var(--vp-c-bg-soft);
-      }
-    }
-  }
-</style>
