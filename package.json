@@ -17,6 +17,9 @@
       "default": "./dist/components/index.js",
       "module": "./dist/components/index.js",
       "types": "./dist/components/index.d.ts"
+    },
+    "./components/style": {
+      "default": "./dist/components/style.css"
     }
   },
   "workspaces": [
@@ -26,8 +29,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "vite build",
-    "build:watch": "vite build --watch",
+    "build": "vite build --config vite.config.library.ts && vite build --config vite.config.components.ts",
+    "build:watch": "vite build --config vite.config.library.ts --watch & vite build --config vite.config.components.ts --watch",
     "docs:dev": "vitepress dev",
     "docs:build": "vitepress build",
     "docs:preview": "vitepress preview"
@@ -51,7 +54,6 @@
     "typescript": "~5.6.2",
     "vite": "^5.4.10",
     "vite-plugin-dts": "^4.3.0",
-    "vite-plugin-static-copy": "^2.0.0",
     "vue-tsc": "^2.1.8"
   }
 }
