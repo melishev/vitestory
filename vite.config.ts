@@ -2,11 +2,17 @@ import path from 'node:path'
 import { defineConfig } from 'vite'
 import dts from 'vite-plugin-dts'
 import vue from '@vitejs/plugin-vue'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 export default defineConfig({
   plugins: [
     vue(),
-    dts({ tsconfigPath: './tsconfig.app.json' })
+    dts({ tsconfigPath: './tsconfig.app.json', exclude: ['**/components/**'] }),
+    viteStaticCopy({
+      targets: [
+        { src: 'src/components/**/!(*.story).*', dest: 'components' }
+      ]
+    })
   ],
 
   build: {
