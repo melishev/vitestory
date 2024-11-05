@@ -44,7 +44,7 @@ export default withViteStory(
     description: 'A ViteStory Site',
     srcDir: 'docs',
     themeConfig: {
-      logo: 'https://em-content.zobj.net/source/apple/391/classical-building_1f3db-fe0f.png',
+      logo: '/logo.png',
       socialLinks: [{ icon: 'github', link: 'https://github.com/melishev/vitestory' }],
 
       nav: [
@@ -52,8 +52,29 @@ export default withViteStory(
         { text: 'Components', link: '/components' },
       ],
 
-      sidebar: sidebarStories,
+      sidebar: [
+        { text: 'Yet another?', link: '/yet-another' },
+        { text: 'Getting Started', link: '/getting-started' },
+        {
+          text: 'Modules',
+          items: [
+            { text: 'API Parser', link: '' },
+            { text: 'Story Parser', link: '' },
+            { text: 'Render Strategies', link: '' },
+          ],
+        },
+        {
+          text: 'Components',
+          items: [
+            { text: 'About', link: '' },
+            { text: 'Controllers', items: sidebarStories },
+            { text: 'Primitives', items: sidebarStories },
+          ],
+        },
+      ],
     },
+
+    head: [['link', { rel: 'icon', href: '/logo.png' }]],
 
     vite: {
       css: {

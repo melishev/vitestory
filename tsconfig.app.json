@@ -27,7 +27,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.md"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "docs/**/*.vue", "docs/**/*.md"],
   "vueCompilerOptions": {
     "vitePressExtensions": [".md"]
   }
