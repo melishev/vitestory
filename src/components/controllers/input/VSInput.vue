@@ -1,10 +1,8 @@
 <script setup lang="ts">
-import { Input } from '../ui/input'
+import { Input } from '../../ui/input'
+import type { VSInputProps } from './types'
 
-defineProps<{
-  title: string
-  placeholder?: string
-}>()
+defineProps<VSInputProps>()
 
 const model = defineModel<string>({ required: true })
 </script>

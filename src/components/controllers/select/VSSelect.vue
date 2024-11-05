@@ -1,18 +1,10 @@
 <script setup lang="ts">
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../ui/select'
+import type { VSSelectProps } from './types'
 
-interface VSSelectOption {
-  label: string
-  value: string
-}
+defineProps<VSSelectProps>()
 
-defineProps<{
-  title: string
-  options?: VSSelectOption[]
-  placeholder?: string
-}>()
-
-const model = defineModel<VSSelectOption['value']>({ required: true })
+const model = defineModel<VSSelectProps['options'][number]['value']>({ required: true })
 </script>
 
 <template>
