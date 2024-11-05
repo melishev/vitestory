@@ -9,7 +9,6 @@ declare module 'vitepress' {
 }
 
 export interface ViteStoryExposeOptions {
-  slug: string
   title: string
   description: string
   components: Component[]

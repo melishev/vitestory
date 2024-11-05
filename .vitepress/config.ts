@@ -29,8 +29,14 @@ function getStoryPaths(dir: string) {
   return results
 }
 
-const stories = getStoryPaths(path.resolve(__dirname, '../src/components/ui'))
-const sidebarStories = stories.map((pathToStory) => ({ text: path.basename(pathToStory), link: '/components/button' }))
+const stories = getStoryPaths(path.resolve(__dirname, '../src/components'))
+const sidebarStories = stories.map((pathToStory) => {
+  const text = path.basename(pathToStory).replace('.story.vue', '')
+  return {
+    text,
+    link: `/components/${text.toLowerCase()}`,
+  }
+})
 
 export default withViteStory(
   defineConfig({
@@ -38,7 +44,8 @@ export default withViteStory(
     description: 'A ViteStory Site',
     srcDir: 'docs',
     themeConfig: {
-      logo: '/logo.webp',
+      logo: 'https://em-content.zobj.net/source/apple/391/classical-building_1f3db-fe0f.png',
+      socialLinks: [{ icon: 'github', link: 'https://github.com/melishev/vitestory' }],
 
       nav: [
         { text: 'Home', link: '/' },

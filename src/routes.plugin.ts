@@ -75,6 +75,7 @@ export default {
     const checker = setupChecker('${pathToTSConfig}');
 
     for (const pathToStory of ${JSON.stringify(paths)}) {
+      const fileName = path.basename(pathToStory).replace('.story.vue', '')
       const dataAboutStory = await moduleStoryParser(pathToStory)
       const ${key2} = {}
 
@@ -89,6 +90,7 @@ export default {
 
       paths.push({
         params: {
+          slug: fileName.toLowerCase(),
           pathToStory,
           ...dataAboutStory,
           ${key2},
