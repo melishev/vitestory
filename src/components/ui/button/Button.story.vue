@@ -1,14 +1,37 @@
 <script setup lang="ts">
+import { ChevronRight, Loader2, Mail } from 'lucide-vue-next'
 import type { ViteStoryExposeOptions } from 'vitestory'
-import { VSVariant } from 'vitestory/components'
-import Button from './Button.vue'
-import { Input } from '../input'
-import { Switch } from '../switch'
+import { VSSelect, VSVariant } from 'vitestory/components'
+import { reactive } from 'vue'
 
-import { ChevronRight, Mail, Loader2 } from 'lucide-vue-next'
+import Button from './Button.vue'
+import { type ButtonVariants } from './index'
+
+const optionsVariant: Record<'label' | 'value', NonNullable<ButtonVariants['variant']>>[] = [
+  { label: 'default', value: 'default' },
+  { label: 'destructive', value: 'destructive' },
+  { label: 'ghost', value: 'ghost' },
+  { label: 'link', value: 'link' },
+  { label: 'outline', value: 'outline' },
+  { label: 'secondary', value: 'secondary' },
+]
+
+const optionsSize: Record<'label' | 'value', NonNullable<ButtonVariants['size']>>[] = [
+  { label: 'default', value: 'default' },
+  { label: 'icon', value: 'icon' },
+  { label: 'lg', value: 'lg' },
+  { label: 'sm', value: 'sm' },
+]
+
+const state = reactive<{
+  variant: NonNullable<ButtonVariants['variant']>
+  size: NonNullable<ButtonVariants['size']>
+}>({
+  variant: 'default',
+  size: 'default',
+})
 
 defineExpose<ViteStoryExposeOptions>({
-  slug: 'button',
   title: 'Button',
   description: 'Button is used to trigger some actions',
   components: [Button],
@@ -16,27 +39,31 @@ defineExpose<ViteStoryExposeOptions>({
 </script>
 
 <template>
-  <VSVariant title="Playground">
-    <Button>touch me</Button>
+  <VSVariant
+    title="Playground"
+    playground
+    source='<Button :variant="state.variant" :size="state.size">touch me</Button>'
+  >
+    <Button :variant="state.variant" :size="state.size">touch me</Button>
 
     <template #controls>
-      <Input type="email" placeholder="Email" />
-      <Switch />
+      <VSSelect v-model="state.variant" title="variant" :options="optionsVariant" />
+      <VSSelect v-model="state.size" title="size" :options="optionsSize" />
     </template>
   </VSVariant>
 
   <h3>Examples</h3>
 
-  <VSVariant title="Primary">
+  <VSVariant title="Primary" source="<Button>Button</Button>">
     <Button>Button</Button>
   </VSVariant>
 
-  <VSVariant title="Secondary">
-    <Button variant="secondary"> Secondary </Button>
+  <VSVariant title="Secondary" source='<Button variant="secondary">Secondary</Button>'>
+    <Button variant="secondary">Secondary</Button>
   </VSVariant>
 
-  <VSVariant title="Destructive">
-    <Button variant="destructive"> Destructive </Button>
+  <VSVariant title="Destructive" source='<Button variant="destructive">Destructive</Button>'>
+    <Button variant="destructive">Destructive</Button>
   </VSVariant>
 
   <VSVariant title="Outline">
