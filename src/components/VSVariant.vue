@@ -4,6 +4,7 @@ import { Code } from 'lucide-vue-next'
 import { h, ref, useSlots } from 'vue'
 
 import strategyNative from './native.strategy'
+import strategyShadow from './shadow.strategy'
 import { Button as VSButton } from './ui/button'
 import VSCode from './VSCode.vue'
 
@@ -13,7 +14,7 @@ const props = withDefaults(
     source?: string
     centering?: boolean
     playground?: boolean
-    strategy?: 'native'
+    strategy?: 'native' | 'shadow'
   }>(),
   { strategy: 'native' },
 )
@@ -26,6 +27,9 @@ const slots = useSlots()
 switch (props.strategy) {
   case 'native':
     strategyNative(boxRef, h(slots.default))
+    break
+  case 'shadow':
+    strategyShadow(boxRef, h(slots.default), slots.default()[0].type.__name)
     break
 }
 </script>
