@@ -31,6 +31,18 @@ function getStoryPaths(dir: string) {
 }
 
 const stories = getStoryPaths(path.resolve(__dirname, '../src/components'))
+const sidebarComponents = stories.reduce<DefaultTheme.SidebarItem[]>((acc, pathToStory) => {
+  if (pathToStory.includes('components/controllers')) return acc
+  if (pathToStory.includes('components/ui')) return acc
+  const text = path.basename(pathToStory).replace('.story.vue', '')
+
+  acc.push({
+    text,
+    link: `/components/${text.toLowerCase()}`,
+  })
+
+  return acc
+}, [])
 const sidebarComponentsControllers = stories.reduce<DefaultTheme.SidebarItem[]>((acc, pathToStory) => {
   if (!pathToStory.includes('components/controllers')) return acc
   const text = path.basename(pathToStory).replace('.story.vue', '')
@@ -82,7 +94,7 @@ export default withViteStory(
         {
           text: 'Components',
           items: [
-            { text: 'About', link: '/components' },
+            ...sidebarComponents,
             { text: 'Controllers', items: sidebarComponentsControllers },
             { text: 'Primitives', items: sidebarComponentsPrimitives },
           ],
