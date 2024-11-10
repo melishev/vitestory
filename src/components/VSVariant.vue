@@ -1,19 +1,33 @@
 <script setup lang="ts">
 // TODO: add the ability to expand to full screen
 import { Code } from 'lucide-vue-next'
-import { ref } from 'vue'
+import { h, ref, useSlots } from 'vue'
 
+import strategyNative from './native.strategy'
 import { Button as VSButton } from './ui/button'
 import VSCode from './VSCode.vue'
 
-defineProps<{
-  title?: string
-  source?: string
-  centering?: boolean
-  playground?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    title?: string
+    source?: string
+    centering?: boolean
+    playground?: boolean
+    strategy?: 'native'
+  }>(),
+  { strategy: 'native' },
+)
 
-const showCode = ref(false)
+const showCode = ref(props.playground)
+const boxRef = ref<HTMLDivElement | null>(null)
+
+const slots = useSlots()
+
+switch (props.strategy) {
+  case 'native':
+    strategyNative(boxRef, h(slots.default))
+    break
+}
 </script>
 
 <template>
@@ -30,9 +44,10 @@ const showCode = ref(false)
     class="vs-mx-0 vs-my-4 vs-w-full vs-overflow-hidden vs-rounded-lg vs-border vs-border-solid vs-border-[var(--vp-c-border)]"
   >
     <div class="vp-raw vs-flex vs-gap-5 vs-p-5">
-      <div :class="['vs-flex-grow', { 'vs-flex vs-flex-grow vs-items-center vs-justify-center': centering }]">
-        <slot />
-      </div>
+      <div
+        ref="boxRef"
+        :class="['vs-flex-grow', { 'vs-flex vs-flex-grow vs-items-center vs-justify-center': centering }]"
+      />
 
       <div
         v-if="$slots.controls && playground"
