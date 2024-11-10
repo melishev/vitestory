@@ -40,9 +40,10 @@ defineExpose<ViteStoryExposeOptions>({
 
 <template>
   <VSVariant
-    title="Playground"
+    centering
     playground
     source='<Button :variant="state.variant" :size="state.size">touch me</Button>'
+    strategy="shadow"
   >
     <Button :variant="state.variant" :size="state.size">touch me</Button>
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ViteStoryExposeOptions } from 'vitestory'
 import { VSInput, VSVariant } from 'vitestory/components'
-import { reactive } from 'vue'
+import { computed, reactive } from 'vue'
 
 import type { VSSelectProps } from './types'
 import VSSelect from './VSSelect.vue'
@@ -12,7 +12,7 @@ const state = reactive<{
   placeholder: VSSelectProps['placeholder']
   options: VSSelectProps['options']
 }>({
-  value: '',
+  value: 'red',
   title: '',
   placeholder: '',
   options: [
@@ -22,22 +22,24 @@ const state = reactive<{
   ],
 })
 
+const mirroredOptions = computed(() => state.options.map((option) => ({ ...option, label: option.value })))
+
 defineExpose<ViteStoryExposeOptions>({
   title: 'VSSelect',
-  description: 'VSSelect',
+  description: 'One of the controllers that allows you to display a list of options and select one to transmit',
   components: [VSSelect],
 })
 </script>
 
 <template>
-  <VSVariant playground>
+  <VSVariant centering playground strategy="shadow">
     <VSSelect v-model="state.value" :title="state.title" :placeholder="state.placeholder" :options="state.options" />
 
     <template #controls>
-      <VSInput v-model="state.value" title="value" />
+      <VSSelect v-model="state.value" title="modelValue" :options="mirroredOptions" />
       <VSInput v-model="state.title" title="title" />
       <VSInput v-model="state.placeholder" title="placeholder" />
-      <pre>{{ state.options }}</pre>
+      <!-- TODO: add controller for objects and arrays data type -->
     </template>
   </VSVariant>
 </template>

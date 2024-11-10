@@ -3,6 +3,7 @@ import path from 'node:path'
 
 import autoprefixer from 'autoprefixer'
 import tailwind from 'tailwindcss'
+import type { DefaultTheme } from 'vitepress'
 import { defineConfig } from 'vitepress'
 import { withViteStory } from 'vitestory'
 
@@ -30,13 +31,28 @@ function getStoryPaths(dir: string) {
 }
 
 const stories = getStoryPaths(path.resolve(__dirname, '../src/components'))
-const sidebarStories = stories.map((pathToStory) => {
+const sidebarComponentsControllers = stories.reduce<DefaultTheme.SidebarItem[]>((acc, pathToStory) => {
+  if (!pathToStory.includes('components/controllers')) return acc
   const text = path.basename(pathToStory).replace('.story.vue', '')
-  return {
+
+  acc.push({
     text,
     link: `/components/${text.toLowerCase()}`,
-  }
-})
+  })
+
+  return acc
+}, [])
+const sidebarComponentsPrimitives = stories.reduce<DefaultTheme.SidebarItem[]>((acc, pathToStory) => {
+  if (!pathToStory.includes('components/ui')) return acc
+  const text = path.basename(pathToStory).replace('.story.vue', '')
+
+  acc.push({
+    text,
+    link: `/components/${text.toLowerCase()}`,
+  })
+
+  return acc
+}, [])
 
 export default withViteStory(
   defineConfig({
@@ -48,7 +64,7 @@ export default withViteStory(
       socialLinks: [{ icon: 'github', link: 'https://github.com/melishev/vitestory' }],
 
       nav: [
-        { text: 'Home', link: '/' },
+        { text: 'Getting Started', link: '/getting-started' },
         { text: 'Components', link: '/components' },
       ],
 
@@ -66,9 +82,9 @@ export default withViteStory(
         {
           text: 'Components',
           items: [
-            { text: 'About', link: '' },
-            { text: 'Controllers', items: sidebarStories },
-            { text: 'Primitives', items: sidebarStories },
+            { text: 'About', link: '/components' },
+            { text: 'Controllers', items: sidebarComponentsControllers },
+            { text: 'Primitives', items: sidebarComponentsPrimitives },
           ],
         },
       ],

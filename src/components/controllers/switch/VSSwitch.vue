@@ -4,12 +4,12 @@ import type { VSSwitchProps } from './types'
 
 defineProps<VSSwitchProps>()
 
-const model = defineModel<boolean>({ required: true })
+const model = defineModel<boolean>()
 </script>
 
 <template>
-  <div class="vs-flex vs-items-center vs-gap-x-1">
-    <small class="vs-text-sm">{{ title }}</small>
+  <div class="vs-flex vs-items-center vs-justify-between vs-gap-x-1">
+    <small v-if="title" class="vs-text-sm vs-font-medium">{{ title }}</small>
     <Switch :checked="model" @update:checked="model = $event" />
   </div>
 </template>

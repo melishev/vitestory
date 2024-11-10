@@ -9,7 +9,7 @@ const model = defineModel<VSSelectProps['options'][number]['value']>({ required:
 
 <template>
   <div class="vs-flex vs-flex-col vs-gap-1">
-    <small class="vs-text-sm">{{ title }}</small>
+    <small v-if="title" class="vs-text-sm vs-font-medium">{{ title }}</small>
 
     <Select v-model="model">
       <SelectTrigger>

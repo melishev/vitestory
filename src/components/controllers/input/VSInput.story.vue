@@ -18,17 +18,17 @@ const state = reactive<{
 
 defineExpose<ViteStoryExposeOptions>({
   title: 'VSInput',
-  description: 'VSInput',
+  description: 'One of the controllers that allows you to manipulate the string',
   components: [VSInput],
 })
 </script>
 
 <template>
-  <VSVariant playground>
+  <VSVariant centering playground strategy="shadow">
     <VSInput v-model="state.value" :title="state.title" :placeholder="state.placeholder" />
 
     <template #controls>
-      <VSInput v-model="state.value" title="value" />
+      <VSInput v-model="state.value" title="modelValue" />
       <VSInput v-model="state.title" title="title" />
       <VSInput v-model="state.placeholder" title="placeholder" />
     </template>

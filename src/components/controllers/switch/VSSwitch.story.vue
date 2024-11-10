@@ -16,17 +16,18 @@ const state = reactive<{
 
 defineExpose<ViteStoryExposeOptions>({
   title: 'VSSwitch',
-  description: 'VSSwitch',
+  description:
+    'One of the controllers that allows you to poke from false to true, then from true to false, or vice versa, or vice versa again',
   components: [VSSwitch],
 })
 </script>
 
 <template>
-  <VSVariant playground>
+  <VSVariant centering playground strategy="shadow">
     <VSSwitch v-model="state.value" :title="state.title" />
 
     <template #controls>
-      <VSSwitch v-model="state.value" title="value" />
+      <VSSwitch v-model="state.value" title="modelValue" />
       <VSInput v-model="state.title" title="title" />
     </template>
   </VSVariant>
