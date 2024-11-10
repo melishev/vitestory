@@ -8,8 +8,8 @@ const model = defineModel<boolean>({ required: true })
 </script>
 
 <template>
-  <div>
-    <small>{{ title }}</small>
+  <div class="vs-flex vs-items-center vs-gap-x-1">
+    <small class="vs-text-sm">{{ title }}</small>
     <Switch :checked="model" @update:checked="model = $event" />
   </div>
 </template>
