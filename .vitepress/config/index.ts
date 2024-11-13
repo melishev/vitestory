@@ -11,6 +11,7 @@ import { stories } from './utils'
 
 export default withViteStory(
   defineConfig({
+    base: '/vitestory/',
     title: 'ViteStory',
     srcDir: 'docs',
 
