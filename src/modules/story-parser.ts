@@ -1,79 +1,76 @@
 import fs from 'node:fs/promises'
 import path from 'node:path'
 
-import { babelParse, parse, walk } from '@vue/compiler-sfc'
-import type { SFCParseResult } from 'vue/compiler-sfc'
+import type { Node } from '@babel/types'
+import { compileScript, parse, SFCScriptBlock, walk } from 'vue/compiler-sfc'
 
-import type { ViteStoryExposeOptions } from '../types'
+async function storyScriptParser(pathToStory: string) {
+  // vue file parsing
+  const sfcRaw = await fs.readFile(pathToStory, 'utf-8')
+  const parsed = parse(sfcRaw)
 
-async function parseSFC(pathToFile: string): Promise<SFCParseResult> {
-  const sfcRaw = await fs.readFile(pathToFile, 'utf-8')
-  return parse(sfcRaw)
-}
-
-function buildASTForScript(scriptContent: string) {
-  const ast = babelParse(scriptContent, {
-    sourceType: 'module',
-    plugins: ['typescript'],
+  // script block analysis
+  return compileScript(parsed.descriptor, {
+    id: '',
   })
-
-  return ast
 }
 
-function getExposeData(pathToFile: string, ast: ReturnType<typeof babelParse>): ViteStoryExposeOptions {
-  const data = {} as ViteStoryExposeOptions
-  const componentPaths: Record<string, string> = {}
+/** Identifies dependency files within a story */
+export async function storyImportsExtractor(
+  pathToStory: string,
+  scriptBlock?: SFCScriptBlock,
+): Promise<Record<string, string>> {
+  if (!scriptBlock) {
+    scriptBlock = await storyScriptParser(pathToStory)
+  }
+
+  const result: Record<string, string> = {}
+
+  if (!scriptBlock.imports) return result
+
+  for (const [key, value] of Object.entries(scriptBlock.imports)) {
+    if (value.isType) continue
+    if (!value.isUsedInTemplate) continue
+    if (!value.source.startsWith('.')) continue
+
+    const pathToSource = path.join(pathToStory, '..', value.source)
+    result[key] = pathToSource
+  }
+
+  return result
+}
+
+/** Pulls data from defineExpose */
+export async function storyMetaDataExtractor(pathToStory: string) {
+  const result = {}
+
+  const scriptBlock = await storyScriptParser(pathToStory)
+  const ast = scriptBlock.scriptSetupAst || scriptBlock.scriptAst
+  const imports = await storyImportsExtractor(pathToStory, scriptBlock)
 
   walk(ast, {
-    enter(node) {
-      if (node.type === 'ImportDeclaration') {
-        const importPath = node.source.value
-        node.specifiers.forEach((specifier) => {
-          if (specifier.type === 'ImportDefaultSpecifier' || specifier.type === 'ImportSpecifier') {
-            componentPaths[specifier.local.name] = path.resolve(pathToFile, '../', importPath)
+    enter(node: Node) {
+      if (node.type !== 'CallExpression') return
+      if (node.callee.loc?.identifierName !== 'defineExpose') return
+
+      node.arguments.forEach((arg) => {
+        if (arg.type !== 'ObjectExpression') return
+        arg.properties.forEach((prop) => {
+          if (!prop.key && !prop.value) return
+
+          result[prop.key.name] = prop.value.value
+
+          if (prop.key.name === 'components' && prop.value.type === 'ArrayExpression') {
+            result.components = prop.value.elements.reduce((acc, element) => {
+              acc[element.name] = imports[element.name]
+
+              return acc
+            }, {})
           }
         })
-      }
-
-      if (node.type === 'CallExpression' && node.callee.name === 'defineExpose') {
-        node.arguments.forEach((arg) => {
-          if (arg.type === 'ObjectExpression') {
-            arg.properties.forEach((prop) => {
-              if (prop.key && prop.value) {
-                data[prop.key.name] = prop.value.value
-              }
-
-              if (prop.key && prop.key.name === 'components' && prop.value.type === 'ArrayExpression') {
-                const components = new Map()
-
-                for (const element of prop.value.elements) {
-                  if (element.type !== 'Identifier') continue
-                  if (!componentPaths[element.name]) continue
-
-                  components.set(element.name, componentPaths[element.name])
-                }
-
-                data['components'] = components
-              }
-            })
-          }
-        })
-      }
+      })
     },
   })
 
-  return data
-}
-
-export default async function (pathToStory: string): Promise<ViteStoryExposeOptions | undefined> {
-  const parsed = await parseSFC(pathToStory)
-
-  if (parsed.descriptor.scriptSetup) {
-    const scriptContent = parsed.descriptor.scriptSetup.content
-
-    const ast = buildASTForScript(scriptContent)
-    const exposedData = getExposeData(pathToStory, ast)
-
-    return exposedData
-  }
+  return result
 }
